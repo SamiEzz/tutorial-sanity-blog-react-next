@@ -4,8 +4,8 @@
     "name": "my-blog"
   },
   "api": {
-    "projectId": "0wopf0m0",
-    "dataset": "production"
+    "projectId": "9kfzk4em",
+    "dataset": "blog"
   },
   "plugins": [
     "@sanity/base",
