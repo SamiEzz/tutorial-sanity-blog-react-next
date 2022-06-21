@@ -1,20 +1,30 @@
 import Link from 'next/link'
 import groq from 'groq'
+import imageUrlBuilder from '@sanity/image-url'
 import client from '../client'
 
-const Index = ({posts}) => {
+function urlFor (source) {
+    return imageUrlBuilder(client).image(source)
+  }
+  
+const Games = ({games}) => {
     return (
       <div>
-        <h1>Welcome to a blog!</h1>
-        {posts.length > 0 && posts.map(
-          ({ _id, title = '', slug = '', publishedAt = '' }) =>
+        <h1>Welcome to the Gamez!</h1>
+        {games.length > 0 && games.map(
+          ({ _id, name = '', slug = '', thumbnail = "" }) =>
             slug && (
-              <li key={_id}>
-                <Link href="/post/[slug]" as={`/post/${slug.current}`}>
-                  <a>{title}</a>
+              <div key={_id}>
+                <img
+                    src={urlFor(thumbnail)
+                        .width(50)
+                        .url()}
+                    alt={`${name}'s picture`}
+                />
+                <Link href="/game/[slug]" as={`/game/${slug.current}`}>
+                  <a>{name}</a>
                 </Link>{' '}
-                ({new Date(publishedAt).toDateString()})
-              </li>
+              </div>
             )
         )}
       </div>
@@ -22,14 +32,14 @@ const Index = ({posts}) => {
 }
 
 export async function getStaticProps() {
-    const posts = await client.fetch(groq`
-      *[_type == "post" && publishedAt < now()]|order(publishedAt desc)
+    const games = await client.fetch(groq`
+      *[_type == "game"]
     `)
     return {
       props: {
-        posts
+        games
       }
     }
 }
 
-export default Index
+export default Games
